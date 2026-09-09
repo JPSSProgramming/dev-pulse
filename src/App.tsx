@@ -1,7 +1,9 @@
 
+import { useState } from 'react';
 import {
     AppBar,
     Box,
+    Checkbox,
     Chip,
     Container,
     CssBaseline,
@@ -20,9 +22,16 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 import FlareIcon from '@mui/icons-material/Flare';
 import CodeIcon from '@mui/icons-material/Code';
+import type { Task } from './types/task';
 
 function App() {
     const drawerWidth = 240;
+    const [tasks] = useState<Task[]>([
+        { id: 1, title: 'Finish React component', priority: 'high', category: 'code', completed: false },
+        { id: 2, title: 'Study TypeScript generics', priority: 'medium', category: 'study', completed: false },
+        { id: 3, title: 'Take a short break', priority: 'low', category: 'rest', completed: false },
+    ]);
+    const taskCount = tasks.length;
 
     const navItems = [
         { text: 'Dashboard', icon: <DashboardIcon /> },
@@ -132,7 +141,7 @@ function App() {
                 </List>
             </Drawer>
 
-            <Box component="main" sx={{ flexGrow: 1, p: { xs: 2, sm: 4 }, textAlign: 'left' }}>
+            <Box component="main" data-task-count={taskCount} sx={{ flexGrow: 1, p: { xs: 2, sm: 4 }, textAlign: 'left' }}>
                 <Toolbar />
                 <Container maxWidth="lg" disableGutters>
                     <Stack spacing={3}>
@@ -173,9 +182,38 @@ function App() {
                                     <Typography variant="h6" component="h3" sx={{ fontWeight: 600, mb: 1, color: '#1e293b' }}>
                                         Daily Dev Goals
                                     </Typography>
-                                    <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.5 }}>
-                                        Placeholder for planning and reviewing today&apos;s key development tasks.
-                                    </Typography>
+                                    <Stack spacing={2}>
+                                        {tasks.map((task) => (
+                                            <Box
+                                                key={task.id}
+                                                sx={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'space-between',
+                                                    gap: 2,
+                                                    border: '1px solid #e2e8f0',
+                                                    borderRadius: 2,
+                                                    px: 1.5,
+                                                    py: 1,
+                                                }}
+                                            >
+                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, minWidth: 0, flex: 1 }}>
+                                                    <Checkbox checked={task.completed} disabled sx={{ p: 0.5 }} />
+                                                    <Typography variant="body2" sx={{ fontWeight: 500, color: '#0f172a' }}>
+                                                        {task.title}
+                                                    </Typography>
+                                                </Box>
+                                                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                                                    <Typography variant="caption" sx={{ px: 1, py: 0.5, borderRadius: 1, bgcolor: '#e2e8f0', color: '#334155' }}>
+                                                        {task.priority}
+                                                    </Typography>
+                                                    <Typography variant="caption" sx={{ px: 1, py: 0.5, borderRadius: 1, bgcolor: '#dbeafe', color: '#1d4ed8' }}>
+                                                        {task.category}
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
+                                        ))}
+                                    </Stack>
                                 </Paper>
                             </Grid>
 
