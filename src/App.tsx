@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { PaletteMode } from '@mui/material';
-import { Box, CssBaseline, ThemeProvider, Toolbar } from '@mui/material';
+import { Box, CssBaseline, ThemeProvider, Toolbar} from '@mui/material';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import TrackChangesRoundedIcon from '@mui/icons-material/TrackChangesRounded';
 import FlareRoundedIcon from '@mui/icons-material/FlareRounded';
@@ -107,6 +107,7 @@ const App = () => {
           onMenuToggle={() => setMobileOpen((prev) => !prev)}
           mode={mode}
           onToggleMode={() => setMode((prev) => (prev === 'light' ? 'dark' : 'light'))}
+          drawerWidth={drawerWidth}
         />
         <Sidebar
           drawerWidth={drawerWidth}
@@ -116,8 +117,16 @@ const App = () => {
           mobileOpen={mobileOpen}
           onClose={() => setMobileOpen(false)}
         />
-
-        <Box component="main" sx={{ flexGrow: 1, minWidth: 0, p: { xs: 2, sm: 3 } }}>
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            minWidth: 0,
+            p: { xs: 2, sm: 3 },
+            width: { md: `calc(100% - ${drawerWidth}px)` },
+            ml: { md: `${drawerWidth}px` },
+          }}
+        >
           <Toolbar />
           {activeSection === 'dashboard' && (
             <Dashboard
