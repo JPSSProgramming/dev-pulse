@@ -37,7 +37,7 @@ export const Header = ({ onMenuToggle, mode, onToggleMode, drawerWidth }: Header
           <MenuIcon />
         </IconButton>
 
-        <Typography variant="h6" sx={{ fontWeight: 800 }}>
+        <Typography variant="h6" sx={{ fontWeight: 800, letterSpacing: '-0.04em' }}>
           DevPulse
         </Typography>
 

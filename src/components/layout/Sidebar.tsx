@@ -37,7 +37,11 @@ const SidebarContent = ({ items, activeSection, onSelect }: Pick<SidebarProps, '
           key={item.key}
           selected={activeSection === item.key}
           onClick={() => onSelect(item.key)}
-          sx={{ mb: 0.5, borderRadius: 1.5 }}
+          sx={{
+            mb: 0.5,
+            borderRadius: 1.5,
+            py: 1.1,
+          }}
         >
           <ListItemIcon>{item.icon}</ListItemIcon>
           <ListItemText primary={item.label} />
