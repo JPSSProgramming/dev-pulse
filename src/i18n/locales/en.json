@@ -1,0 +1,86 @@
+{
+  "header": {
+    "status": "Developer: Building",
+    "toggleTheme": "Toggle theme",
+    "language": "Language"
+  },
+  "navigation": {
+    "label": "navigation",
+    "dashboard": "Dashboard",
+    "dailyGoals": "Daily Goals",
+    "focusPulse": "Focus Pulse",
+    "snippetsVault": "Snippets Vault"
+  },
+  "dashboard": {
+    "greeting": "Good day, Developer",
+    "description": "Keep momentum across daily goals, focus sessions, and reusable snippets.",
+    "dailyProgress": "Daily progress",
+    "completed": "completed",
+    "totalTasks": "total tasks",
+    "completedTasks": "completed",
+    "savedSnippets": "snippets saved",
+    "quickActions": "Quick actions",
+    "addTask": "Add Task",
+    "startFocus": "Start Focus",
+    "addSnippet": "Add Snippet"
+  },
+  "common": {
+    "focus": "Focus",
+    "break": "Break",
+    "start": "Start",
+    "pause": "Pause",
+    "reset": "Reset",
+    "active": "Active",
+    "completed": "Completed"
+  },
+  "tasks": {
+    "title": "Daily Dev Goals",
+    "progress": "Progress",
+    "addTask": "Add task",
+    "taskTitle": "Task title",
+    "priority": "Priority",
+    "category": "Category",
+    "create": "Create task",
+    "filters": "Filters",
+    "status": "Status",
+    "all": "All",
+    "active": "Active",
+    "completed": "Completed",
+    "allPriorities": "All priorities",
+    "empty": "No tasks yet. Create your first goal.",
+    "delete": "Delete task",
+    "priorityValues": {
+      "low": "low",
+      "medium": "medium",
+      "high": "high"
+    },
+    "categoryValues": {
+      "code": "code",
+      "study": "study",
+      "rest": "rest"
+    }
+  },
+  "timer": {
+    "title": "Focus Pulse",
+    "mode": "Mode",
+    "focus": "Focus",
+    "break": "Break",
+    "start": "Start",
+    "pause": "Pause",
+    "reset": "Reset"
+  },
+  "snippets": {
+    "title": "Snippets Vault",
+    "snippetTitle": "Title",
+    "language": "Language",
+    "code": "Code",
+    "tags": "Tags (comma separated)",
+    "save": "Save snippet",
+    "search": "Search snippets",
+    "filterTag": "Filter by tag",
+    "empty": "No snippets yet. Save your first useful piece of code.",
+    "noMatches": "No snippets match your search.",
+    "copied": "Copied",
+    "copy": "Copy code"
+  }
+}
