@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 
 import type { NavSection } from '../../types/navigation';
+import { useTranslation } from '../../i18n/I18nProvider';
 
 interface SidebarItem {
   key: NavSection;
@@ -59,8 +60,10 @@ export const Sidebar = ({
   mobileOpen,
   onClose,
 }: SidebarProps) => {
+  const { t } = useTranslation();
+
   return (
-    <Box component="nav" sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }} aria-label="navigation">
+    <Box component="nav" sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }} aria-label={t('navigation.label')}>
       <Drawer
         variant="temporary"
         open={mobileOpen}

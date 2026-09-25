@@ -2,6 +2,7 @@
 import {
   AppBar,
   Box,
+  Button,
   Chip,
   IconButton,
   Toolbar,
@@ -10,6 +11,7 @@ import {
 import type { PaletteMode } from '@mui/material';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
+import { useTranslation } from '../../i18n/I18nProvider';
 
 interface HeaderProps {
   onMenuToggle: () => void;
@@ -19,7 +21,7 @@ interface HeaderProps {
 }
 
 export const Header = ({ onMenuToggle, mode, onToggleMode, drawerWidth }: HeaderProps) => {
-
+  const { language, setLanguage, t } = useTranslation();
   return (
     <AppBar
       position="fixed"
@@ -43,11 +45,14 @@ export const Header = ({ onMenuToggle, mode, onToggleMode, drawerWidth }: Header
 
         <Box sx={{ flexGrow: 1 }} />
 
-        <Chip label="Developer: Building" color="primary" variant="outlined" size="small" />
+        <Chip label={t('header.status')} color="primary" variant="outlined" size="small" />
 
-        <IconButton onClick={onToggleMode} color="primary" aria-label="toggle theme">
+        <IconButton onClick={onToggleMode} color="primary" aria-label={t('header.toggleTheme')}>
           {mode === 'light' ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
         </IconButton>
+        <Button size="small" onClick={() => setLanguage(language === 'uk' ? 'en' : 'uk')} aria-label={t('header.language')}>
+          {language.toUpperCase()}
+        </Button>
       </Toolbar>
     </AppBar>
   );
