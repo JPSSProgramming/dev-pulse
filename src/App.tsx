@@ -17,6 +17,7 @@ import type { NavSection } from './types/navigation';
 import type { Task } from './types/task';
 import type { Snippet } from './types/snippet';
 import { loadFromStorage, saveToStorage } from './utils/localStorage';
+import { useTranslation } from './i18n/I18nProvider';
 
 const THEME_KEY = 'devpulse-theme-mode';
 const TASKS_KEY = 'devpulse-tasks';
@@ -61,6 +62,7 @@ const initialTimerSnapshot: TimerSnapshot = {
 };
 
 const App = () => {
+  const { t } = useTranslation();
   const [mode, setMode] = useState<PaletteMode>(() => {
     const stored = loadFromStorage<PaletteMode | null>(THEME_KEY, null);
     return stored === 'dark' ? 'dark' : 'light';
@@ -88,10 +90,10 @@ const App = () => {
   const completedTasks = tasks.filter((task) => task.completed).length;
 
   const navigationItems = [
-    { key: 'dashboard' as const, label: 'Dashboard', icon: <DashboardRoundedIcon /> },
-    { key: 'daily-goals' as const, label: 'Daily Goals', icon: <TrackChangesRoundedIcon /> },
-    { key: 'focus-pulse' as const, label: 'Focus Pulse', icon: <FlareRoundedIcon /> },
-    { key: 'snippets-vault' as const, label: 'Snippets Vault', icon: <CodeRoundedIcon /> },
+    { key: 'dashboard' as const, label: t('navigation.dashboard'), icon: <DashboardRoundedIcon /> },
+    { key: 'daily-goals' as const, label: t('navigation.dailyGoals'), icon: <TrackChangesRoundedIcon /> },
+    { key: 'focus-pulse' as const, label: t('navigation.focusPulse'), icon: <FlareRoundedIcon /> },
+    { key: 'snippets-vault' as const, label: t('navigation.snippetsVault'), icon: <CodeRoundedIcon /> },
   ];
 
   const handleSectionSelect = (section: NavSection) => {
