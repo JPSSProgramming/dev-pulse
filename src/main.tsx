@@ -5,6 +5,7 @@ import { createRouter, RouterProvider } from '@tanstack/react-router'
 import { routeTree } from './routeTree.gen'
 import { AppStateProvider } from './context/AppStateContext'
 import { I18nProvider } from './i18n/I18nProvider'
+import { GoalProvider } from './context/GoalContext'
 
 const router = createRouter({ routeTree })
 
@@ -18,7 +19,9 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <I18nProvider>
       <AppStateProvider>
-        <RouterProvider router={router} />
+        <GoalProvider>
+          <RouterProvider router={router} />
+        </GoalProvider>
       </AppStateProvider>
     </I18nProvider>
   </StrictMode>,
