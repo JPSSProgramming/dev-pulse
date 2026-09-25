@@ -12,7 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 
-import type { TimerSnapshot } from '../App';
+import type { TimerSnapshot } from '../context/AppStateContext';
 import { useTranslation } from '../i18n/I18nProvider';
 
 interface DashboardProps {

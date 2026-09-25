@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Box, Button, Card, CardContent, CircularProgress, Stack, Typography } from '@mui/material';
-import type { TimerSnapshot } from '../router/Router';
+import type { TimerSnapshot } from '../context/AppStateContext';
 import { useTranslation } from '../i18n/I18nProvider';
 
 interface FocusPulsePageProps {
