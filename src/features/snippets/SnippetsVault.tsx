@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 
 import type { Snippet, SnippetLanguage } from '../../types/snippet';
+import { useTranslation } from '../../i18n/I18nProvider';
 
 interface SnippetsVaultProps {
   snippets: Snippet[];
@@ -25,6 +26,7 @@ interface SnippetsVaultProps {
 const languages: SnippetLanguage[] = ['typescript', 'javascript', 'python', 'go', 'java', 'css', 'html', 'other'];
 
 export const SnippetsVault = ({ snippets, onSnippetsChange }: SnippetsVaultProps) => {
+  const { t } = useTranslation();
   const [title, setTitle] = useState('');
   const [language, setLanguage] = useState<SnippetLanguage>('typescript');
   const [code, setCode] = useState('');
@@ -87,15 +89,15 @@ export const SnippetsVault = ({ snippets, onSnippetsChange }: SnippetsVaultProps
     <Stack spacing={2.5}>
       <Card>
         <CardContent>
-          <Typography variant="h5" gutterBottom>Snippets Vault</Typography>
+          <Typography variant="h5" gutterBottom>{t('snippets.title')}</Typography>
           <Stack spacing={1.2}>
-            <TextField label="Title" value={title} onChange={(event) => setTitle(event.target.value)} fullWidth />
-            <TextField select label="Language" value={language} onChange={(event) => setLanguage(event.target.value as SnippetLanguage)} fullWidth>
+            <TextField label={t('snippets.snippetTitle')} value={title} onChange={(event) => setTitle(event.target.value)} fullWidth />
+            <TextField select label={t('snippets.language')} value={language} onChange={(event) => setLanguage(event.target.value as SnippetLanguage)} fullWidth>
               {languages.map((item) => <MenuItem key={item} value={item}>{item}</MenuItem>)}
             </TextField>
-            <TextField label="Code" value={code} onChange={(event) => setCode(event.target.value)} multiline minRows={6} fullWidth />
-            <TextField label="Tags (comma separated)" value={tagsInput} onChange={(event) => setTagsInput(event.target.value)} fullWidth />
-            <Button variant="contained" onClick={addSnippet} disabled={!title.trim() || !code.trim()}>Save snippet</Button>
+            <TextField label={t('snippets.code')} value={code} onChange={(event) => setCode(event.target.value)} multiline minRows={6} fullWidth />
+            <TextField label={t('snippets.tags')} value={tagsInput} onChange={(event) => setTagsInput(event.target.value)} fullWidth />
+            <Button variant="contained" onClick={addSnippet} disabled={!title.trim() || !code.trim()}>{t('snippets.save')}</Button>
           </Stack>
         </CardContent>
       </Card>
@@ -103,16 +105,16 @@ export const SnippetsVault = ({ snippets, onSnippetsChange }: SnippetsVaultProps
       <Card>
         <CardContent>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.2}>
-            <TextField label="Search snippets" value={search} onChange={(event) => setSearch(event.target.value)} fullWidth />
-            <TextField label="Filter by tag" value={tagFilter} onChange={(event) => setTagFilter(event.target.value)} fullWidth />
+            <TextField label={t('snippets.search')} value={search} onChange={(event) => setSearch(event.target.value)} fullWidth />
+            <TextField label={t('snippets.filterTag')} value={tagFilter} onChange={(event) => setTagFilter(event.target.value)} fullWidth />
           </Stack>
         </CardContent>
       </Card>
 
       {snippets.length === 0 ? (
-        <Card><CardContent><Typography color="text.secondary">No snippets yet. Save your first useful piece of code.</Typography></CardContent></Card>
+        <Card><CardContent><Typography color="text.secondary">{t('snippets.empty')}</Typography></CardContent></Card>
       ) : filtered.length === 0 ? (
-        <Alert severity="info">No snippets match your search.</Alert>
+        <Alert severity="info">{t('snippets.noMatches')}</Alert>
       ) : (
         <Stack spacing={1.2}>
           {filtered.map((snippet) => (
@@ -128,7 +130,7 @@ export const SnippetsVault = ({ snippets, onSnippetsChange }: SnippetsVaultProps
                   </Box>
                   <Stack direction="row" spacing={0.8}>
                     <Button size="small" startIcon={<ContentCopyRoundedIcon />} onClick={() => copyCode(snippet.id, snippet.code)}>
-                      {copiedId === snippet.id ? 'Copied' : 'Copy code'}
+                      {copiedId === snippet.id ? t('snippets.copied') : t('snippets.copy')}
                     </Button>
                     <IconButton color="error" onClick={() => deleteSnippet(snippet.id)}>
                       <DeleteRoundedIcon />

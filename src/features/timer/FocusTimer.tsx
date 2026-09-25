@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 
 import type { TimerSnapshot } from '../../App';
+import { useTranslation } from '../../i18n/I18nProvider';
 
 interface FocusTimerProps {
   snapshot: TimerSnapshot;
@@ -25,6 +26,7 @@ const getDefaultsForMode = (mode: TimerSnapshot['mode']) => {
 };
 
 export const FocusTimer = ({ snapshot, onSnapshotChange }: FocusTimerProps) => {
+  const { t } = useTranslation();
   useEffect(() => {
     if (!snapshot.isRunning) {
       return;
@@ -57,8 +59,8 @@ export const FocusTimer = ({ snapshot, onSnapshotChange }: FocusTimerProps) => {
     <Card>
       <CardContent>
         <Stack spacing={2} sx={{ alignItems: 'center' }}>
-          <Typography variant="h5">Focus Pulse</Typography>
-          <Typography color="text.secondary">Mode: {snapshot.mode === 'focus' ? 'Focus' : 'Break'}</Typography>
+          <Typography variant="h5">{t('timer.title')}</Typography>
+          <Typography color="text.secondary">{t('timer.mode')}: {snapshot.mode === 'focus' ? t('timer.focus') : t('timer.break')}</Typography>
 
           <Box sx={{ position: 'relative', display: 'inline-flex' }}>
             <CircularProgress variant="determinate" value={100} size={180} thickness={4} color="inherit" sx={{ color: 'action.hover' }} />
@@ -69,9 +71,9 @@ export const FocusTimer = ({ snapshot, onSnapshotChange }: FocusTimerProps) => {
           </Box>
 
           <Stack direction="row" spacing={1.2}>
-            <Button variant="contained" onClick={() => onSnapshotChange({ ...snapshot, isRunning: true })} disabled={snapshot.isRunning}>Start</Button>
-            <Button variant="outlined" onClick={() => onSnapshotChange({ ...snapshot, isRunning: false })} disabled={!snapshot.isRunning}>Pause</Button>
-            <Button variant="text" onClick={reset}>Reset</Button>
+            <Button variant="contained" onClick={() => onSnapshotChange({ ...snapshot, isRunning: true })} disabled={snapshot.isRunning}>{t('timer.start')}</Button>
+            <Button variant="outlined" onClick={() => onSnapshotChange({ ...snapshot, isRunning: false })} disabled={!snapshot.isRunning}>{t('timer.pause')}</Button>
+            <Button variant="text" onClick={reset}>{t('timer.reset')}</Button>
           </Stack>
         </Stack>
       </CardContent>

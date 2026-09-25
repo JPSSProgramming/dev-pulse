@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 
 import type { TimerSnapshot } from '../App';
+import { useTranslation } from '../i18n/I18nProvider';
 
 interface DashboardProps {
   totalTasks: number;
@@ -33,6 +34,7 @@ export const Dashboard = ({
   onGoToFocus,
   onGoToSnippets,
 }: DashboardProps) => {
+  const { t } = useTranslation();
   const progressPercent = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
 
   return (
@@ -40,10 +42,10 @@ export const Dashboard = ({
       <Card>
         <CardContent>
           <Typography variant="h4" gutterBottom>
-            Good day, Developer
+            {t('dashboard.greeting')}
           </Typography>
           <Typography color="text.secondary">
-            Keep momentum across daily goals, focus sessions, and reusable snippets.
+            {t('dashboard.description')}
           </Typography>
         </CardContent>
       </Card>
@@ -52,12 +54,12 @@ export const Dashboard = ({
         <CardContent>
           <Stack spacing={1.2}>
             <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography variant="h6">Daily progress</Typography>
+              <Typography variant="h6">{t('dashboard.dailyProgress')}</Typography>
               <Chip label={`${completedTasks}/${totalTasks}`} color="primary" variant="outlined" />
             </Stack>
             <LinearProgress variant="determinate" value={progressPercent} sx={{ height: 8, borderRadius: 4 }} />
             <Typography variant="body2" color="text.secondary">
-              {progressPercent}% completed
+              {progressPercent}% {t('dashboard.completed')}
             </Typography>
           </Stack>
         </CardContent>
@@ -67,17 +69,17 @@ export const Dashboard = ({
         <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ height: '100%' }}>
             <CardContent>
-              <Typography variant="h6">Daily Goals</Typography>
-              <Typography color="text.secondary">{totalTasks} total tasks, {completedTasks} completed</Typography>
+              <Typography variant="h6">{t('navigation.dailyGoals')}</Typography>
+              <Typography color="text.secondary">{totalTasks} {t('dashboard.totalTasks')}, {completedTasks} {t('dashboard.completedTasks')}</Typography>
             </CardContent>
           </Card>
         </Grid>
         <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ height: '100%' }}>
             <CardContent>
-              <Typography variant="h6">Focus Pulse</Typography>
+              <Typography variant="h6">{t('navigation.focusPulse')}</Typography>
               <Typography color="text.secondary">
-                {timerSnapshot.mode === 'focus' ? 'Focus' : 'Break'} • {Math.floor(timerSnapshot.remainingSeconds / 60)}:{String(timerSnapshot.remainingSeconds % 60).padStart(2, '0')}
+                {timerSnapshot.mode === 'focus' ? t('common.focus') : t('common.break')} • {Math.floor(timerSnapshot.remainingSeconds / 60)}:{String(timerSnapshot.remainingSeconds % 60).padStart(2, '0')}
               </Typography>
             </CardContent>
           </Card>
@@ -85,8 +87,8 @@ export const Dashboard = ({
         <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ height: '100%' }}>
             <CardContent>
-              <Typography variant="h6">Snippets Vault</Typography>
-              <Typography color="text.secondary">{snippetCount} snippets saved</Typography>
+              <Typography variant="h6">{t('navigation.snippetsVault')}</Typography>
+              <Typography color="text.secondary">{snippetCount} {t('dashboard.savedSnippets')}</Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -94,11 +96,11 @@ export const Dashboard = ({
 
       <Card>
         <CardContent>
-          <Typography variant="h6" gutterBottom>Quick actions</Typography>
+          <Typography variant="h6" gutterBottom>{t('dashboard.quickActions')}</Typography>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.2}>
-            <Button startIcon={<AddTaskRoundedIcon />} variant="contained" onClick={onGoToGoals}>Add Task</Button>
-            <Button startIcon={<FlareRoundedIcon />} variant="outlined" onClick={onGoToFocus}>Start Focus</Button>
-            <Button startIcon={<CodeRoundedIcon />} variant="outlined" onClick={onGoToSnippets}>Add Snippet</Button>
+            <Button startIcon={<AddTaskRoundedIcon />} variant="contained" onClick={onGoToGoals}>{t('dashboard.addTask')}</Button>
+            <Button startIcon={<FlareRoundedIcon />} variant="outlined" onClick={onGoToFocus}>{t('dashboard.startFocus')}</Button>
+            <Button startIcon={<CodeRoundedIcon />} variant="outlined" onClick={onGoToSnippets}>{t('dashboard.addSnippet')}</Button>
           </Stack>
         </CardContent>
       </Card>
