@@ -1,6 +1,7 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import uk from './locales/uk.json';
 import en from './locales/en.json';
+import { loadFromStorage, saveToStorage } from '../utils/localStorage';
 
 export type Language = 'uk' | 'en';
 
@@ -30,14 +31,18 @@ const getValue = (object: TranslationObject, path: string): string => {
 
 export const I18nProvider = ({ children }: { children: ReactNode }) => {
     const [language, setLanguageState] = useState<Language>(() => {
-        const stored = localStorage.getItem('devpulse-language');
+        const stored = loadFromStorage<string | null>('devpulse-language', null);
         return stored === 'uk' || stored === 'en' ? stored : 'uk';
     });
 
     const setLanguage = (nextLanguage: Language) => {
         setLanguageState(nextLanguage);
-        localStorage.setItem('devpulse-language', nextLanguage);
+        saveToStorage('devpulse-language', nextLanguage);
     };
+
+    useEffect(() => {
+        document.documentElement.lang = language;
+    }, [language]);
 
     const value = useMemo(
         () => ({
