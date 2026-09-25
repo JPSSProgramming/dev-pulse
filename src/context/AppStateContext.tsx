@@ -30,11 +30,45 @@ const initialSnippets: Snippet[] = [
   },
 ];
 
+const isTask = (value: unknown): value is Task => {
+  if (!value || typeof value !== 'object') return false;
+  const task = value as Partial<Task>;
+  return typeof task.id === 'number'
+    && typeof task.title === 'string'
+    && (task.priority === 'low' || task.priority === 'medium' || task.priority === 'high')
+    && (task.category === 'code' || task.category === 'study' || task.category === 'rest')
+    && typeof task.completed === 'boolean';
+};
+
+const isSnippet = (value: unknown): value is Snippet => {
+  if (!value || typeof value !== 'object') return false;
+  const snippet = value as Partial<Snippet>;
+  return typeof snippet.id === 'number'
+    && typeof snippet.title === 'string'
+    && (snippet.language === 'typescript' || snippet.language === 'javascript' || snippet.language === 'python'
+      || snippet.language === 'go' || snippet.language === 'java' || snippet.language === 'css'
+      || snippet.language === 'html' || snippet.language === 'other')
+    && typeof snippet.code === 'string'
+    && Array.isArray(snippet.tags)
+    && snippet.tags.every((tag) => typeof tag === 'string');
+};
+
+const isTimerSnapshot = (value: unknown): value is TimerSnapshot => {
+  if (!value || typeof value !== 'object') return false;
+  const timer = value as Partial<TimerSnapshot>;
+  return (timer.mode === 'focus' || timer.mode === 'break')
+    && typeof timer.remainingSeconds === 'number'
+    && typeof timer.totalSeconds === 'number'
+    && typeof timer.isRunning === 'boolean'
+    && (timer.startedAt === undefined || typeof timer.startedAt === 'number');
+};
+
 export interface TimerSnapshot {
   mode: 'focus' | 'break';
   remainingSeconds: number;
   totalSeconds: number;
   isRunning: boolean;
+  startedAt?: number;
 }
 
 interface AppState {
@@ -49,17 +83,23 @@ interface AppState {
 const AppStateContext = createContext<AppState | null>(null);
 
 export const AppStateProvider = ({ children }: { children: ReactNode }) => {
-  const [tasks, setTasks] = useState(() => loadFromStorage<Task[]>(TASKS_KEY, initialTasks));
-  const [snippets, setSnippets] = useState(() => loadFromStorage<Snippet[]>(SNIPPETS_KEY, initialSnippets));
-  const [timerSnapshot, setTimerSnapshot] = useState<TimerSnapshot>({
-    mode: 'focus',
-    remainingSeconds: 25 * 60,
-    totalSeconds: 25 * 60,
-    isRunning: false,
+  const [tasks, setTasks] = useState(() => {
+    const stored = loadFromStorage<unknown>(TASKS_KEY, null);
+    return Array.isArray(stored) && stored.every(isTask) ? stored : initialTasks;
+  });
+  const [snippets, setSnippets] = useState(() => {
+    const stored = loadFromStorage<unknown>(SNIPPETS_KEY, null);
+    return Array.isArray(stored) && stored.every(isSnippet) ? stored : initialSnippets;
+  });
+  const [timerSnapshot, setTimerSnapshot] = useState<TimerSnapshot>(() => {
+    const fallback: TimerSnapshot = { mode: 'focus', remainingSeconds: 25 * 60, totalSeconds: 25 * 60, isRunning: false };
+    const stored = loadFromStorage<unknown>('devpulse-timer', null);
+    return isTimerSnapshot(stored) ? stored : fallback;
   });
 
   useEffect(() => saveToStorage(TASKS_KEY, tasks), [tasks]);
   useEffect(() => saveToStorage(SNIPPETS_KEY, snippets), [snippets]);
+  useEffect(() => saveToStorage('devpulse-timer', timerSnapshot), [timerSnapshot]);
 
   return (
     <AppStateContext.Provider value={{ tasks, setTasks, snippets, setSnippets, timerSnapshot, setTimerSnapshot }}>
