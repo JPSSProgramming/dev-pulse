@@ -21,6 +21,7 @@ export const SnippetsVaultPage = ({ snippets, onSnippetsChange }: SnippetsVaultP
   const [search, setSearch] = useState('');
   const [tagFilter, setTagFilter] = useState('');
   const [copiedId, setCopiedId] = useState<number | null>(null);
+  const [copyError, setCopyError] = useState(false);
 
   const filtered = useMemo(() => {
     const searchText = search.trim().toLowerCase();
@@ -38,7 +39,13 @@ export const SnippetsVaultPage = ({ snippets, onSnippetsChange }: SnippetsVaultP
     const trimmedCode = code.trim();
     if (!trimmedTitle || !trimmedCode) return;
 
-    onSnippetsChange([{ id: Date.now(), title: trimmedTitle, language, code: trimmedCode, tags: tagsInput.split(',').map((tag) => tag.trim()).filter(Boolean) }, ...snippets]);
+    onSnippetsChange([{
+      id: snippets.reduce((highest, snippet) => Math.max(highest, snippet.id), 0) + 1,
+      title: trimmedTitle,
+      language,
+      code: trimmedCode,
+      tags: tagsInput.split(',').map((tag) => tag.trim()).filter(Boolean),
+    }, ...snippets]);
     setTitle('');
     setLanguage('typescript');
     setCode('');
@@ -46,9 +53,14 @@ export const SnippetsVaultPage = ({ snippets, onSnippetsChange }: SnippetsVaultP
   };
 
   const copyCode = async (id: number, snippetCode: string) => {
-    await navigator.clipboard.writeText(snippetCode);
-    setCopiedId(id);
-    window.setTimeout(() => setCopiedId((current) => (current === id ? null : current)), 1200);
+    try {
+      await navigator.clipboard.writeText(snippetCode);
+      setCopyError(false);
+      setCopiedId(id);
+      window.setTimeout(() => setCopiedId((current) => (current === id ? null : current)), 1200);
+    } catch {
+      setCopyError(true);
+    }
   };
 
   return (
@@ -67,6 +79,7 @@ export const SnippetsVaultPage = ({ snippets, onSnippetsChange }: SnippetsVaultP
           </Stack>
         </CardContent>
       </Card>
+      {copyError && <Alert severity="warning">{t('snippets.copyError')}</Alert>}
       <Card>
         <CardContent>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.2}>
@@ -96,7 +109,7 @@ export const SnippetsVaultPage = ({ snippets, onSnippetsChange }: SnippetsVaultP
                     <Button size="small" startIcon={<ContentCopyRoundedIcon />} onClick={() => void copyCode(snippet.id, snippet.code)}>
                       {copiedId === snippet.id ? t('snippets.copied') : t('snippets.copy')}
                     </Button>
-                    <IconButton color="error" onClick={() => onSnippetsChange(snippets.filter((item) => item.id !== snippet.id))}>
+                    <IconButton color="error" aria-label={t('snippets.delete')} onClick={() => onSnippetsChange(snippets.filter((item) => item.id !== snippet.id))}>
                       <DeleteRoundedIcon />
                     </IconButton>
                   </Stack>

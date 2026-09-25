@@ -53,7 +53,7 @@ export const DailyGoalsPage = ({ tasks, onTasksChange }: DailyGoalsPageProps) =>
     if (!trimmed) return;
 
     onTasksChange([
-      { id: Date.now(), title: trimmed, priority, category, completed: false },
+      { id: tasks.reduce((highest, task) => Math.max(highest, task.id), 0) + 1, title: trimmed, priority, category, completed: false },
       ...tasks,
     ]);
     setTitle('');
@@ -127,7 +127,7 @@ export const DailyGoalsPage = ({ tasks, onTasksChange }: DailyGoalsPageProps) =>
           <Card key={task.id}>
             <CardContent>
               <Stack direction="row" spacing={1.2} sx={{ alignItems: 'center' }}>
-                <Checkbox checked={task.completed} onChange={() => toggleTask(task.id)} />
+                <Checkbox checked={task.completed} onChange={() => toggleTask(task.id)} slotProps={{ input: { 'aria-label': task.title } }} />
                 <Box sx={{ flexGrow: 1 }}>
                   <Typography sx={{ textDecoration: task.completed ? 'line-through' : 'none' }}>{task.title}</Typography>
                   <Stack direction="row" spacing={1} sx={{ mt: 0.6 }}>

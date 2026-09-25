@@ -20,23 +20,33 @@ export const FocusPulsePage = ({ snapshot, onSnapshotChange }: FocusPulsePagePro
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (!snapshot.isRunning) return;
+    if (!snapshot.isRunning || !snapshot.startedAt) return undefined;
 
     const id = window.setInterval(() => {
-      if (snapshot.remainingSeconds <= 1) {
+      const elapsed = Math.floor((Date.now() - snapshot.startedAt!) / 1000);
+      const remaining = Math.max(0, snapshot.remainingSeconds - elapsed);
+      if (remaining <= 0) {
         const nextMode: TimerSnapshot['mode'] = snapshot.mode === 'focus' ? 'break' : 'focus';
         onSnapshotChange({ mode: nextMode, ...getDefaultsForMode(nextMode), isRunning: false });
         return;
       }
-      onSnapshotChange({ ...snapshot, remainingSeconds: snapshot.remainingSeconds - 1 });
+      onSnapshotChange({ ...snapshot, remainingSeconds: remaining, startedAt: Date.now() });
     }, 1000);
 
     return () => window.clearInterval(id);
-  }, [snapshot, onSnapshotChange]);
+  }, [onSnapshotChange, snapshot]);
 
   const minutes = Math.floor(snapshot.remainingSeconds / 60);
   const seconds = snapshot.remainingSeconds % 60;
-  const progress = ((snapshot.totalSeconds - snapshot.remainingSeconds) / snapshot.totalSeconds) * 100;
+  const progress = snapshot.totalSeconds > 0
+    ? Math.min(100, Math.max(0, ((snapshot.totalSeconds - snapshot.remainingSeconds) / snapshot.totalSeconds) * 100))
+    : 0;
+  const start = () => onSnapshotChange({ ...snapshot, isRunning: true, startedAt: Date.now() });
+  const pause = () => {
+    if (!snapshot.startedAt) return;
+    const elapsed = Math.floor((Date.now() - snapshot.startedAt) / 1000);
+    onSnapshotChange({ ...snapshot, remainingSeconds: Math.max(0, snapshot.remainingSeconds - elapsed), isRunning: false, startedAt: undefined });
+  };
   const reset = () => onSnapshotChange({ ...getDefaultsForMode(snapshot.mode), mode: snapshot.mode, isRunning: false });
 
   return (
@@ -52,10 +62,10 @@ export const FocusPulsePage = ({ snapshot, onSnapshotChange }: FocusPulsePagePro
               <Typography variant="h4">{minutes}:{String(seconds).padStart(2, '0')}</Typography>
             </Box>
           </Box>
-          <Stack direction="row" spacing={1.2}>
-            <Button variant="contained" onClick={() => onSnapshotChange({ ...snapshot, isRunning: true })} disabled={snapshot.isRunning}>{t('timer.start')}</Button>
-            <Button variant="outlined" onClick={() => onSnapshotChange({ ...snapshot, isRunning: false })} disabled={!snapshot.isRunning}>{t('timer.pause')}</Button>
-            <Button variant="text" onClick={reset}>{t('timer.reset')}</Button>
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.2} sx={{ width: '100%', justifyContent: 'center' }}>
+            <Button variant="contained" onClick={start} disabled={snapshot.isRunning} fullWidth>{t('timer.start')}</Button>
+            <Button variant="outlined" onClick={pause} disabled={!snapshot.isRunning} fullWidth>{t('timer.pause')}</Button>
+            <Button variant="text" onClick={reset} fullWidth>{t('timer.reset')}</Button>
           </Stack>
         </Stack>
       </CardContent>
