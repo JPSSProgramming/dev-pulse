@@ -14,7 +14,7 @@ import { Route as DailyGoalsRouteImport } from './routes/daily-goals'
 import { Route as FocusPulseRouteImport } from './routes/focus-pulse'
 import { Route as MicroStepRouteImport } from './routes/micro-step'
 import { Route as SnippetsVaultRouteImport } from './routes/snippets-vault'
-import { Route as MicroStepGoalIdRouteImport } from './routes/micro-step/$goalId'
+import { Route as MicroStepGoalIdRouteImport } from './routes/$goalId.tsx'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
