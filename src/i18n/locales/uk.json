@@ -1,6 +1,7 @@
 {
   "header": {
     "status": "Розробник: у процесі",
+    "openMenu": "Відкрити меню навігації",
     "toggleTheme": "Змінити тему",
     "language": "Мова"
   },
@@ -9,7 +10,8 @@
     "dashboard": "Панель керування",
     "dailyGoals": "Щоденні цілі",
     "focusPulse": "Фокус",
-    "snippetsVault": "Сховище сніпетів"
+    "snippetsVault": "Сховище сніпетів",
+    "microStep": "MicroStep"
   },
   "dashboard": {
     "greeting": "Доброго дня, розробнику",
@@ -82,5 +84,34 @@
     "noMatches": "За вашим запитом сніпетів не знайдено.",
     "copied": "Скопійовано",
     "copy": "Копіювати код"
+    ,"delete": "Видалити сніпет",
+    "copyError": "Доступ до буфера обміну заборонено. Скопіюйте код вручну."
+  },
+  "microStep": {
+    "title": "MicroStep",
+    "description": "Перетворюйте великі цілі на маленькі кроки, які легко виконати.",
+    "createGoal": "Створити ціль",
+    "firstStep": "Перший 5-хвилинний крок",
+    "goalTitle": "Назва цілі",
+    "goalDescription": "Опис (необов'язково)",
+    "create": "Створити ціль",
+    "empty": "Цілей ще немає. Створіть свою першу ціль.",
+    "progress": "Прогрес",
+    "steps": "кроків",
+    "openGoal": "Відкрити ціль",
+    "deleteGoal": "Видалити ціль",
+    "goalNotFound": "Ціль не знайдена.",
+    "backToGoals": "Назад до цілей",
+    "stepsTitle": "Кроки",
+    "stepTitle": "Назва нового кроку",
+    "addStep": "Додати крок",
+    "focus": "Фокус",
+    "timerTitle": "Фокус на кроці",
+    "notificationTitle": "MicroStep",
+    "notificationBody": "Ваш мікрокрок завершено.",
+    "start": "Старт",
+    "pause": "Пауза",
+    "reset": "Скинути",
+    "timerComplete": "Крок завершено! Чудова робота."
   }
 }

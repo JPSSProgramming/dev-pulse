@@ -1,6 +1,7 @@
 {
   "header": {
     "status": "Developer: Building",
+    "openMenu": "Open navigation menu",
     "toggleTheme": "Toggle theme",
     "language": "Language"
   },
@@ -9,7 +10,8 @@
     "dashboard": "Dashboard",
     "dailyGoals": "Daily Goals",
     "focusPulse": "Focus Pulse",
-    "snippetsVault": "Snippets Vault"
+    "snippetsVault": "Snippets Vault",
+    "microStep": "MicroStep"
   },
   "dashboard": {
     "greeting": "Good day, Developer",
@@ -82,5 +84,34 @@
     "noMatches": "No snippets match your search.",
     "copied": "Copied",
     "copy": "Copy code"
+    ,"delete": "Delete snippet",
+    "copyError": "Clipboard access was denied. Copy the code manually."
+  },
+  "microStep": {
+    "title": "MicroStep",
+    "description": "Turn big goals into small, achievable steps.",
+    "createGoal": "Create a goal",
+    "firstStep": "First 5-minute step",
+    "goalTitle": "Goal title",
+    "goalDescription": "Description (optional)",
+    "create": "Create goal",
+    "empty": "No goals yet. Create your first goal.",
+    "progress": "Progress",
+    "steps": "steps",
+    "openGoal": "Open goal",
+    "deleteGoal": "Delete goal",
+    "goalNotFound": "Goal not found.",
+    "backToGoals": "Back to goals",
+    "stepsTitle": "Steps",
+    "stepTitle": "New step title",
+    "addStep": "Add step",
+    "focus": "Focus",
+    "timerTitle": "Focus on this step",
+    "notificationTitle": "MicroStep",
+    "notificationBody": "Your micro-step is complete.",
+    "start": "Start",
+    "pause": "Pause",
+    "reset": "Reset",
+    "timerComplete": "Step complete! Great work."
   }
 }
