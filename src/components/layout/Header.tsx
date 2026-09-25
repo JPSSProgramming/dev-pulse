@@ -34,18 +34,18 @@ export const Header = ({ onMenuToggle, mode, onToggleMode, drawerWidth }: Header
         ml: { md: `${drawerWidth}px` },
       }}
     >
-      <Toolbar sx={{ gap: 1.5 }}>
-        <IconButton edge="start" onClick={onMenuToggle} sx={{ display: { md: 'none' } }}>
+      <Toolbar sx={{ gap: { xs: 0.5, sm: 1.5 }, px: { xs: 1.5, sm: 2 } }}>
+        <IconButton edge="start" onClick={onMenuToggle} aria-label={t('header.openMenu')} sx={{ display: { md: 'none' } }}>
           <MenuIcon />
         </IconButton>
 
-        <Typography variant="h6" sx={{ fontWeight: 800, letterSpacing: '-0.04em' }}>
+        <Typography variant="h6" sx={{ fontWeight: 800, letterSpacing: '-0.04em', whiteSpace: 'nowrap' }}>
           DevPulse
         </Typography>
 
         <Box sx={{ flexGrow: 1 }} />
 
-        <Chip label={t('header.status')} color="primary" variant="outlined" size="small" />
+        <Chip label={t('header.status')} color="primary" variant="outlined" size="small" sx={{ display: { xs: 'none', sm: 'inline-flex' } }} />
 
         <IconButton onClick={onToggleMode} color="primary" aria-label={t('header.toggleTheme')}>
           {mode === 'light' ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}

@@ -3,7 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { Box, Divider, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Toolbar } from '@mui/material';
 import { useTranslation } from '../../i18n/I18nProvider';
 
-type RoutePath = '/' | '/daily-goals' | '/focus-pulse' | '/snippets-vault';
+type RoutePath = '/' | '/daily-goals' | '/focus-pulse' | '/snippets-vault' | '/micro-step';
 
 interface SidebarItem {
   key: string;
@@ -30,7 +30,7 @@ const SidebarContent = ({ items, activePath, onClose }: Pick<SidebarProps, 'item
           key={item.key}
           component={Link}
           to={item.path}
-          selected={activePath === item.path}
+          selected={activePath === item.path || (item.path !== '/' && activePath.startsWith(`${item.path}/`))}
           onClick={onClose}
           sx={{ mb: 0.5, borderRadius: 1.5, py: 1.1 }}
         >

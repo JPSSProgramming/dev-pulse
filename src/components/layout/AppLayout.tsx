@@ -6,6 +6,7 @@ import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import TrackChangesRoundedIcon from '@mui/icons-material/TrackChangesRounded';
 import FlareRoundedIcon from '@mui/icons-material/FlareRounded';
 import CodeRoundedIcon from '@mui/icons-material/CodeRounded';
+import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 import { createAppTheme } from '../../theme/theme';
@@ -32,6 +33,7 @@ export const AppLayout = ({ children }: { children: ReactNode }) => {
     { key: 'daily-goals' as const, path: '/daily-goals', label: t('navigation.dailyGoals'), icon: <TrackChangesRoundedIcon /> },
     { key: 'focus-pulse' as const, path: '/focus-pulse', label: t('navigation.focusPulse'), icon: <FlareRoundedIcon /> },
     { key: 'snippets-vault' as const, path: '/snippets-vault', label: t('navigation.snippetsVault'), icon: <CodeRoundedIcon /> },
+    { key: 'micro-step' as const, path: '/micro-step', label: t('navigation.microStep'), icon: <AutoAwesomeRoundedIcon /> },
   ] as const;
 
   return (
@@ -51,9 +53,11 @@ export const AppLayout = ({ children }: { children: ReactNode }) => {
           mobileOpen={mobileOpen}
           onClose={() => setMobileOpen(false)}
         />
-        <Box component="main" sx={{ flexGrow: 1, minWidth: 0, p: { xs: 2, sm: 3 }, width: { md: `calc(100% - ${drawerWidth}px)` }, ml: { md: `${drawerWidth}px` } }}>
+        <Box component="main" sx={{ flexGrow: 1, minWidth: 0, p: { xs: 2, sm: 3 }, pt: { xs: 2, sm: 3 } }}>
           <Toolbar />
-          {children}
+          <Box sx={{ width: '100%', maxWidth: 1280, mx: 'auto' }}>
+            {children}
+          </Box>
         </Box>
       </Box>
     </ThemeProvider>
