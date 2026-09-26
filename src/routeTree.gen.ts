@@ -10,20 +10,31 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as GoalIdRouteImport } from './routes/$goalId'
 import { Route as DailyGoalsRouteImport } from './routes/daily-goals'
+import { Route as DevNexusRouteImport } from './routes/dev-nexus'
 import { Route as FocusPulseRouteImport } from './routes/focus-pulse'
 import { Route as MicroStepRouteImport } from './routes/micro-step'
 import { Route as SnippetsVaultRouteImport } from './routes/snippets-vault'
-import { Route as MicroStepGoalIdRouteImport } from './routes/$goalId.tsx'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GoalIdRoute = GoalIdRouteImport.update({
+  id: '/$goalId',
+  path: '/$goalId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DailyGoalsRoute = DailyGoalsRouteImport.update({
   id: '/daily-goals',
   path: '/daily-goals',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DevNexusRoute = DevNexusRouteImport.update({
+  id: '/dev-nexus',
+  path: '/dev-nexus',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FocusPulseRoute = FocusPulseRouteImport.update({
@@ -41,69 +52,72 @@ const SnippetsVaultRoute = SnippetsVaultRouteImport.update({
   path: '/snippets-vault',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MicroStepGoalIdRoute = MicroStepGoalIdRouteImport.update({
-  id: '/$goalId',
-  path: '/$goalId',
-  getParentRoute: () => MicroStepRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$goalId': typeof GoalIdRoute
   '/daily-goals': typeof DailyGoalsRoute
+  '/dev-nexus': typeof DevNexusRoute
   '/focus-pulse': typeof FocusPulseRoute
-  '/micro-step': typeof MicroStepRouteWithChildren
+  '/micro-step': typeof MicroStepRoute
   '/snippets-vault': typeof SnippetsVaultRoute
-  '/micro-step/$goalId': typeof MicroStepGoalIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$goalId': typeof GoalIdRoute
   '/daily-goals': typeof DailyGoalsRoute
+  '/dev-nexus': typeof DevNexusRoute
   '/focus-pulse': typeof FocusPulseRoute
-  '/micro-step': typeof MicroStepRouteWithChildren
+  '/micro-step': typeof MicroStepRoute
   '/snippets-vault': typeof SnippetsVaultRoute
-  '/micro-step/$goalId': typeof MicroStepGoalIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$goalId': typeof GoalIdRoute
   '/daily-goals': typeof DailyGoalsRoute
+  '/dev-nexus': typeof DevNexusRoute
   '/focus-pulse': typeof FocusPulseRoute
-  '/micro-step': typeof MicroStepRouteWithChildren
+  '/micro-step': typeof MicroStepRoute
   '/snippets-vault': typeof SnippetsVaultRoute
-  '/micro-step/$goalId': typeof MicroStepGoalIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/$goalId'
     | '/daily-goals'
+    | '/dev-nexus'
     | '/focus-pulse'
     | '/micro-step'
     | '/snippets-vault'
-    | '/micro-step/$goalId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/$goalId'
     | '/daily-goals'
+    | '/dev-nexus'
     | '/focus-pulse'
     | '/micro-step'
     | '/snippets-vault'
-    | '/micro-step/$goalId'
   id:
     | '__root__'
     | '/'
+    | '/$goalId'
     | '/daily-goals'
+    | '/dev-nexus'
     | '/focus-pulse'
     | '/micro-step'
     | '/snippets-vault'
-    | '/micro-step/$goalId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GoalIdRoute: typeof GoalIdRoute
   DailyGoalsRoute: typeof DailyGoalsRoute
+  DevNexusRoute: typeof DevNexusRoute
   FocusPulseRoute: typeof FocusPulseRoute
-  MicroStepRoute: typeof MicroStepRouteWithChildren
+  MicroStepRoute: typeof MicroStepRoute
   SnippetsVaultRoute: typeof SnippetsVaultRoute
 }
 
@@ -116,11 +130,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$goalId': {
+      id: '/$goalId'
+      path: '/$goalId'
+      fullPath: '/$goalId'
+      preLoaderRoute: typeof GoalIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/daily-goals': {
       id: '/daily-goals'
       path: '/daily-goals'
       fullPath: '/daily-goals'
       preLoaderRoute: typeof DailyGoalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dev-nexus': {
+      id: '/dev-nexus'
+      path: '/dev-nexus'
+      fullPath: '/dev-nexus'
+      preLoaderRoute: typeof DevNexusRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/focus-pulse': {
@@ -144,33 +172,16 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SnippetsVaultRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/micro-step/$goalId': {
-      id: '/micro-step/$goalId'
-      path: '/$goalId'
-      fullPath: '/micro-step/$goalId'
-      preLoaderRoute: typeof MicroStepGoalIdRouteImport
-      parentRoute: typeof MicroStepRoute
-    }
   }
 }
 
-interface MicroStepRouteChildren {
-  MicroStepGoalIdRoute: typeof MicroStepGoalIdRoute
-}
-
-const MicroStepRouteChildren: MicroStepRouteChildren = {
-  MicroStepGoalIdRoute: MicroStepGoalIdRoute,
-}
-
-const MicroStepRouteWithChildren = MicroStepRoute._addFileChildren(
-  MicroStepRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GoalIdRoute: GoalIdRoute,
   DailyGoalsRoute: DailyGoalsRoute,
+  DevNexusRoute: DevNexusRoute,
   FocusPulseRoute: FocusPulseRoute,
-  MicroStepRoute: MicroStepRouteWithChildren,
+  MicroStepRoute: MicroStepRoute,
   SnippetsVaultRoute: SnippetsVaultRoute,
 }
 export const routeTree = rootRouteImport

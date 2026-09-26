@@ -2,10 +2,36 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import type { Snippet } from '../types/snippet';
 import type { Task } from '../types/task';
+import type { DevNexusFile, ReviewResults } from '../types/devNexus';
 import { loadFromStorage, saveToStorage } from '../utils/localStorage';
 
 const TASKS_KEY = 'devpulse-tasks';
 const SNIPPETS_KEY = 'devpulse-snippets';
+const DEV_NEXUS_KEY = 'devpulse-dev-nexus';
+
+export const devNexusFiles: DevNexusFile[] = [
+  {
+    id: 'app',
+    name: 'App.tsx',
+    language: 'typescript',
+    path: 'src/App.tsx',
+    code: `import { useMemo } from 'react';\n\nexport function App() {\n  const items = useMemo(() => loadItems(), []);\n\n  return <Workspace items={items} />;\n}`,
+  },
+  {
+    id: 'api',
+    name: 'apiClient.ts',
+    language: 'typescript',
+    path: 'src/services/apiClient.ts',
+    code: `export async function getUser(id: string) {\n  const response = await fetch('/api/users/' + id);\n  return response.json();\n}`,
+  },
+  {
+    id: 'utils',
+    name: 'formatDate.ts',
+    language: 'typescript',
+    path: 'src/utils/formatDate.ts',
+    code: `export const formatDate = (value: string) => {\n  return new Date(value).toLocaleDateString();\n};`,
+  },
+];
 
 const initialTasks: Task[] = [
   { id: 1, title: 'Finish DevPulse layout', priority: 'high', category: 'code', completed: false },
@@ -78,6 +104,12 @@ interface AppState {
   setSnippets: (snippets: Snippet[]) => void;
   timerSnapshot: TimerSnapshot;
   setTimerSnapshot: (snapshot: TimerSnapshot) => void;
+  activeFile: string;
+  setActiveFile: (fileId: string) => void;
+  isSidebarOpen: boolean;
+  setIsSidebarOpen: (open: boolean) => void;
+  reviewResults: ReviewResults;
+  setReviewResults: (results: ReviewResults) => void;
 }
 
 const AppStateContext = createContext<AppState | null>(null);
@@ -96,13 +128,23 @@ export const AppStateProvider = ({ children }: { children: ReactNode }) => {
     const stored = loadFromStorage<unknown>('devpulse-timer', null);
     return isTimerSnapshot(stored) ? stored : fallback;
   });
+  const [activeFile, setActiveFile] = useState('app');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [reviewResults, setReviewResults] = useState<ReviewResults>(() => {
+    const stored = loadFromStorage<unknown>(DEV_NEXUS_KEY, null);
+    return stored && typeof stored === 'object' ? stored as ReviewResults : {};
+  });
 
   useEffect(() => saveToStorage(TASKS_KEY, tasks), [tasks]);
   useEffect(() => saveToStorage(SNIPPETS_KEY, snippets), [snippets]);
   useEffect(() => saveToStorage('devpulse-timer', timerSnapshot), [timerSnapshot]);
+  useEffect(() => saveToStorage(DEV_NEXUS_KEY, reviewResults), [reviewResults]);
 
   return (
-    <AppStateContext.Provider value={{ tasks, setTasks, snippets, setSnippets, timerSnapshot, setTimerSnapshot }}>
+    <AppStateContext.Provider value={{
+      tasks, setTasks, snippets, setSnippets, timerSnapshot, setTimerSnapshot,
+      activeFile, setActiveFile, isSidebarOpen, setIsSidebarOpen, reviewResults, setReviewResults,
+    }}>
       {children}
     </AppStateContext.Provider>
   );
