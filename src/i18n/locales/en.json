@@ -73,18 +73,18 @@
   },
   "snippets": {
     "title": "Snippets Vault",
-    "snippetTitle": "Title",
+    "snippetTitle": "Snippet title",
     "language": "Language",
     "code": "Code",
-    "tags": "Tags (comma separated)",
+    "tags": "Tags",
     "save": "Save snippet",
     "search": "Search snippets",
     "filterTag": "Filter by tag",
-    "empty": "No snippets yet. Save your first useful piece of code.",
+    "empty": "No snippets yet. Save your first reusable snippet.",
     "noMatches": "No snippets match your search.",
+    "copy": "Copy code",
     "copied": "Copied",
-    "copy": "Copy code"
-    ,"delete": "Delete snippet",
+    "delete": "Delete snippet",
     "copyError": "Clipboard access was denied. Copy the code manually."
   },
   "microStep": {
@@ -113,5 +113,17 @@
     "pause": "Pause",
     "reset": "Reset",
     "timerComplete": "Step complete! Great work."
+  },
+  "feature": {
+    "title": "Build momentum, one small step at a time",
+    "description": "A focused workspace for daily goals, deep work, reusable knowledge, and steady progress.",
+    "dailyGoals": "Daily goals",
+    "dailyGoalsDescription": "Plan your priorities and track what you accomplish each day.",
+    "focusPulse": "Focus Pulse",
+    "focusPulseDescription": "Work in focused sessions with intentional breaks.",
+    "snippetsVault": "Snippets Vault",
+    "snippetsVaultDescription": "Keep your most useful code and notes ready to reuse.",
+    "microStep": "MicroStep",
+    "microStepDescription": "Turn ambitious goals into clear, achievable next steps."
   }
 }
