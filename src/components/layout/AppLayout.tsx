@@ -7,6 +7,7 @@ import TrackChangesRoundedIcon from '@mui/icons-material/TrackChangesRounded';
 import FlareRoundedIcon from '@mui/icons-material/FlareRounded';
 import CodeRoundedIcon from '@mui/icons-material/CodeRounded';
 import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
+import AccountTreeRoundedIcon from '@mui/icons-material/AccountTreeRounded';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 import { createAppTheme } from '../../theme/theme';
@@ -34,6 +35,7 @@ export const AppLayout = ({ children }: { children: ReactNode }) => {
     { key: 'focus-pulse' as const, path: '/focus-pulse', label: t('navigation.focusPulse'), icon: <FlareRoundedIcon /> },
     { key: 'snippets-vault' as const, path: '/snippets-vault', label: t('navigation.snippetsVault'), icon: <CodeRoundedIcon /> },
     { key: 'micro-step' as const, path: '/micro-step', label: t('navigation.microStep'), icon: <AutoAwesomeRoundedIcon /> },
+    { key: 'dev-nexus' as const, path: '/dev-nexus', label: 'DevNexus Workspace', icon: <AccountTreeRoundedIcon /> },
   ] as const;
 
   return (

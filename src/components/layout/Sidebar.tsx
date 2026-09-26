@@ -3,7 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { Box, Divider, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Toolbar } from '@mui/material';
 import { useTranslation } from '../../i18n/I18nProvider';
 
-type RoutePath = '/' | '/daily-goals' | '/focus-pulse' | '/snippets-vault' | '/micro-step';
+type RoutePath = '/' | '/daily-goals' | '/focus-pulse' | '/snippets-vault' | '/micro-step' | '/dev-nexus';
 
 interface SidebarItem {
   key: string;
