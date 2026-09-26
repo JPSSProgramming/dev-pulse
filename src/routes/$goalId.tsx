@@ -2,7 +2,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { MicroStepGoalDetailsPage } from '../pages/MicroStepGoalDetailsPage.tsx';
 
-export const Route = createFileRoute('/micro-step/$goalId')({
+export const Route = createFileRoute('/$goalId')({
   component: MicroStepGoalDetailsRoute,
 });
 
