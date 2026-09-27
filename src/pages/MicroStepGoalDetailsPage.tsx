@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { useGoals } from '../context/GoalContext';
 import { useTranslation } from '../i18n/I18nProvider';
-import { FocusTimer } from '../components/microstep/FocusTimer';
+import { FocusTimer } from '../components/layout/FocusTimer.tsx';
 
 export const MicroStepGoalDetailsPage = () => {
   const { t } = useTranslation();

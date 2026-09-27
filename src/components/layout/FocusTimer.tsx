@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Alert, Box, Button, Card, CardContent, CircularProgress, Stack, Typography } from '@mui/material';
-import type { MicroStep } from '../../types/microStep';
-import { useTranslation } from '../../i18n/I18nProvider';
+import type { MicroStep } from '../../types/microStep.ts';
+import { useTranslation } from '../../i18n/I18nProvider.tsx';
 
 interface FocusTimerProps {
   step: MicroStep;
