@@ -26,7 +26,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { devNexusFiles, useAppState } from '../context/AppStateContext';
+import { useAppState } from '../context/AppStateContext';
 import type { ReviewFinding, ReviewSeverity } from '../types/devNexus';
 
 const severityColor: Record<ReviewSeverity, 'error' | 'warning' | 'info'> = {
@@ -35,28 +35,51 @@ const severityColor: Record<ReviewSeverity, 'error' | 'warning' | 'info'> = {
   info: 'info',
 };
 
-const reviewFile = (fileId: string): ReviewFinding[] => {
+const reviewFile = (fileId: string, code: string): ReviewFinding[] => {
+  const findings: ReviewFinding[] = [];
+
+  if (code.includes('console.log')) {
+    findings.push({
+      id: `${fileId}-console-log`,
+      severity: 'info',
+      title: 'Знайдено console.log',
+      description: 'Перед production-збіркою перевірте, чи потрібен цей лог.',
+    });
+  }
+
+  if (code.includes('any')) {
+    findings.push({
+      id: `${fileId}-explicit-any`,
+      severity: 'warning',
+      title: 'Уникайте explicit any',
+      description: 'Спробуйте описати точніший тип для покращення type safety.',
+    });
+  }
+
   if (fileId === 'api') {
-    return [
+    findings.push(
       { id: 'api-security', severity: 'warning', title: 'Перевіряйте HTTP-відповідь', description: 'Виклик fetch має перевіряти response.ok перед читанням JSON.', line: 3 },
       { id: 'api-input', severity: 'error', title: 'Безпечне формування URL', description: 'Використовуйте URLSearchParams або encodeURIComponent для значень, що приходять від користувача.', line: 2 },
-    ];
+    );
   }
   if (fileId === 'utils') {
-    return [
+    findings.push(
       { id: 'date-invalid', severity: 'warning', title: 'Обробіть некоректну дату', description: 'Invalid Date може потрапити до форматера. Додайте guard перед форматуванням.', line: 2 },
       { id: 'date-clarity', severity: 'info', title: 'Задайте локаль явно', description: 'Явна локаль робить результат стабільним між середовищами.', line: 2 },
-    ];
+    );
   }
-  return [
-    { id: 'app-memo', severity: 'info', title: 'Мемоізація може бути зайвою', description: 'Для простого виклику loadItems useMemo не обов’язковий. Залишайте його, якщо обчислення справді важке.', line: 4 },
-    { id: 'app-error', severity: 'warning', title: 'Додайте стан помилки', description: 'Покажіть користувачу зрозумілий стан, якщо завантаження елементів завершиться помилкою.', line: 4 },
-  ];
+  if (fileId === 'app') {
+    findings.push(
+      { id: 'app-memo', severity: 'info', title: 'Мемоізація може бути зайвою', description: 'Для простого виклику loadItems useMemo не обов’язковий. Залишайте його, якщо обчислення справді важке.', line: 4 },
+      { id: 'app-error', severity: 'warning', title: 'Додайте стан помилки', description: 'Покажіть користувачу зрозумілий стан, якщо завантаження елементів завершиться помилкою.', line: 4 },
+    );
+  }
+  return findings;
 };
 
 export const DevNexusPage = () => {
   const {
-    activeFile, setActiveFile, isSidebarOpen, setIsSidebarOpen,
+    devNexusFiles, setDevNexusFiles, activeFile, setActiveFile, isSidebarOpen, setIsSidebarOpen,
     reviewResults, setReviewResults,
   } = useAppState();
   const [reviewTab, setReviewTab] = useState(0);
@@ -64,12 +87,12 @@ export const DevNexusPage = () => {
   const [comments, setComments] = useState<string[]>([]);
   const file = useMemo(
     () => devNexusFiles.find((item) => item.id === activeFile) ?? devNexusFiles[0],
-    [activeFile],
+    [activeFile, devNexusFiles],
   );
-  const findings = reviewResults[file.id] ?? [];
 
   const runReview = () => {
-    setReviewResults({ ...reviewResults, [file.id]: reviewFile(file.id) });
+    if (!file) return;
+    setReviewResults({ ...reviewResults, [file.id]: reviewFile(file.id, file.code) });
   };
 
   const addComment = () => {
@@ -77,6 +100,12 @@ export const DevNexusPage = () => {
     setComments([...comments, comment.trim()]);
     setComment('');
   };
+
+  if (!file) {
+    return <Alert severity="info">У workspace ще немає файлів.</Alert>;
+  }
+
+  const findings = reviewResults[file.id] ?? [];
 
   return (
     <Stack spacing={2}>
@@ -126,15 +155,37 @@ export const DevNexusPage = () => {
                 <IconButton aria-label="Оновити"><RefreshRoundedIcon /></IconButton>
               </Stack>
             </Stack>
-            <Paper variant="outlined" sx={{ bgcolor: 'grey.950', color: 'grey.100', overflow: 'auto', p: 2, minHeight: 360 }}>
-              <Box component="pre" sx={{ m: 0, fontFamily: 'monospace', fontSize: 14, lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>
-                {file.code.split('\n').map((line, index) => (
-                  <Box component="div" key={`${file.id}-${index}`} sx={{ display: 'grid', gridTemplateColumns: '36px 1fr' }}>
-                    <Box component="span" sx={{ color: 'grey.600', userSelect: 'none' }}>{index + 1}</Box>
-                    <Box component="span">{line || ' '}</Box>
-                  </Box>
-                ))}
-              </Box>
+            <Paper variant="outlined" sx={{ bgcolor: 'grey.950', color: 'grey.100', overflow: 'hidden', minHeight: 360 }}>
+              <TextField
+                value={file.code}
+                onChange={(event) => {
+                  const updatedCode = event.target.value;
+                  setDevNexusFiles(devNexusFiles.map((item) => (
+                    item.id === file.id ? { ...item, code: updatedCode } : item
+                  )));
+                }}
+                multiline
+                fullWidth
+                minRows={16}
+                spellCheck={false}
+                slotProps={{
+                  input: {
+                    sx: {
+                      alignItems: 'flex-start',
+                      color: 'grey.100',
+                      fontFamily: 'monospace',
+                      fontSize: 14,
+                      lineHeight: 1.8,
+                      p: 2,
+                    },
+                  },
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': { p: 0, borderRadius: 0 },
+                  '& .MuiOutlinedInput-notchedOutline': { border: 0 },
+                  '& textarea': { resize: 'vertical' },
+                }}
+              />
             </Paper>
           </CardContent>
         </Card>

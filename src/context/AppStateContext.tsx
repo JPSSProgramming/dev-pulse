@@ -8,8 +8,9 @@ import { loadFromStorage, saveToStorage } from '../utils/localStorage';
 const TASKS_KEY = 'devpulse-tasks';
 const SNIPPETS_KEY = 'devpulse-snippets';
 const DEV_NEXUS_KEY = 'devpulse-dev-nexus';
+const DEV_NEXUS_FILES_KEY = 'devpulse-dev-nexus-files';
 
-export const devNexusFiles: DevNexusFile[] = [
+const initialDevNexusFiles: DevNexusFile[] = [
   {
     id: 'app',
     name: 'App.tsx',
@@ -78,6 +79,21 @@ const isSnippet = (value: unknown): value is Snippet => {
     && Array.isArray(snippet.tags)
     && snippet.tags.every((tag) => typeof tag === 'string');
 };
+const isDevNexusFile = (value: unknown): value is DevNexusFile => {
+  if (!value || typeof value !== 'object') {
+    return false;
+  }
+  const file = value as Partial<DevNexusFile>;
+
+  return typeof file.id === 'string'
+      && typeof file.name === 'string'
+      && (file.language === 'typescript'
+          || file.language === 'javascript'
+          || file.language === 'python'
+          || file.language === 'css')
+      && typeof file.path === 'string'
+      && typeof file.code === 'string';
+};
 
 const isTimerSnapshot = (value: unknown): value is TimerSnapshot => {
   if (!value || typeof value !== 'object') return false;
@@ -98,6 +114,8 @@ export interface TimerSnapshot {
 }
 
 interface AppState {
+  devNexusFiles: DevNexusFile[];
+  setDevNexusFiles: (files: DevNexusFile[]) => void;
   tasks: Task[];
   setTasks: (tasks: Task[]) => void;
   snippets: Snippet[];
@@ -115,6 +133,13 @@ interface AppState {
 const AppStateContext = createContext<AppState | null>(null);
 
 export const AppStateProvider = ({ children }: { children: ReactNode }) => {
+  const [devNexusFiles, setDevNexusFiles] = useState<DevNexusFile[]>(() => {
+    const stored = loadFromStorage<unknown>(DEV_NEXUS_FILES_KEY, null);
+
+    return Array.isArray(stored) && stored.every(isDevNexusFile)
+        ? stored
+        : initialDevNexusFiles;
+  });
   const [tasks, setTasks] = useState(() => {
     const stored = loadFromStorage<unknown>(TASKS_KEY, null);
     return Array.isArray(stored) && stored.every(isTask) ? stored : initialTasks;
@@ -138,10 +163,12 @@ export const AppStateProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => saveToStorage(TASKS_KEY, tasks), [tasks]);
   useEffect(() => saveToStorage(SNIPPETS_KEY, snippets), [snippets]);
   useEffect(() => saveToStorage('devpulse-timer', timerSnapshot), [timerSnapshot]);
+  useEffect(() => saveToStorage(DEV_NEXUS_FILES_KEY, devNexusFiles), [devNexusFiles]);
   useEffect(() => saveToStorage(DEV_NEXUS_KEY, reviewResults), [reviewResults]);
 
   return (
     <AppStateContext.Provider value={{
+      devNexusFiles, setDevNexusFiles,
       tasks, setTasks, snippets, setSnippets, timerSnapshot, setTimerSnapshot,
       activeFile, setActiveFile, isSidebarOpen, setIsSidebarOpen, reviewResults, setReviewResults,
     }}>
