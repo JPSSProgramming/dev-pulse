@@ -2,13 +2,16 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import type { Snippet } from '../types/snippet';
 import type { Task } from '../types/task';
-import type { DevNexusFile, ReviewResults } from '../types/devNexus';
+import type { DevNexusEditorSettings, DevNexusFile, ReviewResults } from '../types/devNexus';
 import { loadFromStorage, saveToStorage } from '../utils/localStorage';
 
 const TASKS_KEY = 'devpulse-tasks';
 const SNIPPETS_KEY = 'devpulse-snippets';
 const DEV_NEXUS_KEY = 'devpulse-dev-nexus';
 const DEV_NEXUS_FILES_KEY = 'devpulse-dev-nexus-files';
+const DEV_NEXUS_ACTIVE_FILE_KEY = 'devpulse-dev-nexus-active-file';
+const DEV_NEXUS_OPEN_FILES_KEY = 'devpulse-dev-nexus-open-files';
+const DEV_NEXUS_SETTINGS_KEY = 'devpulse-dev-nexus-settings';
 
 const initialDevNexusFiles: DevNexusFile[] = [
   {
@@ -95,6 +98,26 @@ const isDevNexusFile = (value: unknown): value is DevNexusFile => {
       && typeof file.code === 'string';
 };
 
+const defaultDevNexusEditorSettings: DevNexusEditorSettings = {
+  fontSize: 14,
+  tabSize: 2,
+  wordWrap: 'on',
+  showLineNumbers: true,
+  theme: 'dark',
+};
+
+const isDevNexusEditorSettings = (value: unknown): value is DevNexusEditorSettings => {
+  if (!value || typeof value !== 'object') return false;
+  const settings = value as Partial<DevNexusEditorSettings>;
+  return typeof settings.fontSize === 'number'
+    && settings.fontSize >= 10
+    && settings.fontSize <= 24
+    && (settings.tabSize === 2 || settings.tabSize === 4)
+    && (settings.wordWrap === 'on' || settings.wordWrap === 'off')
+    && typeof settings.showLineNumbers === 'boolean'
+    && (settings.theme === 'light' || settings.theme === 'dark');
+};
+
 const isTimerSnapshot = (value: unknown): value is TimerSnapshot => {
   if (!value || typeof value !== 'object') return false;
   const timer = value as Partial<TimerSnapshot>;
@@ -116,6 +139,10 @@ export interface TimerSnapshot {
 interface AppState {
   devNexusFiles: DevNexusFile[];
   setDevNexusFiles: (files: DevNexusFile[]) => void;
+  openFileIds: string[];
+  setOpenFileIds: (ids: string[]) => void;
+  editorSettings: DevNexusEditorSettings;
+  setEditorSettings: (settings: DevNexusEditorSettings) => void;
   tasks: Task[];
   setTasks: (tasks: Task[]) => void;
   snippets: Snippet[];
@@ -140,6 +167,16 @@ export const AppStateProvider = ({ children }: { children: ReactNode }) => {
         ? stored
         : initialDevNexusFiles;
   });
+  const [openFileIds, setOpenFileIds] = useState<string[]>(() => {
+    const stored = loadFromStorage<unknown>(DEV_NEXUS_OPEN_FILES_KEY, null);
+    return Array.isArray(stored) && stored.every((id) => typeof id === 'string')
+      ? stored
+      : initialDevNexusFiles.map((file) => file.id);
+  });
+  const [editorSettings, setEditorSettings] = useState<DevNexusEditorSettings>(() => {
+    const stored = loadFromStorage<unknown>(DEV_NEXUS_SETTINGS_KEY, null);
+    return isDevNexusEditorSettings(stored) ? stored : defaultDevNexusEditorSettings;
+  });
   const [tasks, setTasks] = useState(() => {
     const stored = loadFromStorage<unknown>(TASKS_KEY, null);
     return Array.isArray(stored) && stored.every(isTask) ? stored : initialTasks;
@@ -153,7 +190,9 @@ export const AppStateProvider = ({ children }: { children: ReactNode }) => {
     const stored = loadFromStorage<unknown>('devpulse-timer', null);
     return isTimerSnapshot(stored) ? stored : fallback;
   });
-  const [activeFile, setActiveFile] = useState('app');
+  const [activeFile, setActiveFile] = useState(() => (
+    loadFromStorage<string>(DEV_NEXUS_ACTIVE_FILE_KEY, 'app')
+  ));
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [reviewResults, setReviewResults] = useState<ReviewResults>(() => {
     const stored = loadFromStorage<unknown>(DEV_NEXUS_KEY, null);
@@ -164,11 +203,16 @@ export const AppStateProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => saveToStorage(SNIPPETS_KEY, snippets), [snippets]);
   useEffect(() => saveToStorage('devpulse-timer', timerSnapshot), [timerSnapshot]);
   useEffect(() => saveToStorage(DEV_NEXUS_FILES_KEY, devNexusFiles), [devNexusFiles]);
+  useEffect(() => saveToStorage(DEV_NEXUS_ACTIVE_FILE_KEY, activeFile), [activeFile]);
+  useEffect(() => saveToStorage(DEV_NEXUS_OPEN_FILES_KEY, openFileIds), [openFileIds]);
+  useEffect(() => saveToStorage(DEV_NEXUS_SETTINGS_KEY, editorSettings), [editorSettings]);
   useEffect(() => saveToStorage(DEV_NEXUS_KEY, reviewResults), [reviewResults]);
 
   return (
     <AppStateContext.Provider value={{
       devNexusFiles, setDevNexusFiles,
+      openFileIds, setOpenFileIds,
+      editorSettings, setEditorSettings,
       tasks, setTasks, snippets, setSnippets, timerSnapshot, setTimerSnapshot,
       activeFile, setActiveFile, isSidebarOpen, setIsSidebarOpen, reviewResults, setReviewResults,
     }}>
