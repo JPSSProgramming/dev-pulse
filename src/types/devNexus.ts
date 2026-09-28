@@ -8,6 +8,14 @@ export interface DevNexusFile {
   code: string;
 }
 
+export interface DevNexusEditorSettings {
+  fontSize: number;
+  tabSize: number;
+  wordWrap: 'on' | 'off';
+  showLineNumbers: boolean;
+  theme: 'light' | 'dark';
+}
+
 export interface ReviewFinding {
   id: string;
   severity: ReviewSeverity;
